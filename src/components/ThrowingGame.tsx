@@ -8,15 +8,16 @@ const ThrowingGame = () => {
   const [angle, setAngle] = useState(45);
   const [power, setPower] = useState(50);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [ballPosition, setBallPosition] = useState({ x: 0, y: 0 });
+  const [score, setScore] = useState(0);
+  const [attempts, setAttempts] = useState(0);
 
   const generateTrajectoryKeyframes = (angle: number, power: number) => {
     const frames = [];
     const radians = (angle * Math.PI) / 180;
     const velocity = power * 0.2;
     const gravity = 9.81;
-    const duration = 2; // seconds
-    const steps = 60; // number of keyframes
+    const duration = 2;
+    const steps = 60;
     
     for (let i = 0; i <= steps; i++) {
       const t = (i / steps) * duration;
@@ -30,6 +31,8 @@ const ThrowingGame = () => {
 
   const throwBall = () => {
     setIsAnimating(true);
+    setAttempts(prev => prev + 1);
+    
     const trajectory = generateTrajectoryKeyframes(angle, power);
     const finalPosition = trajectory[trajectory.length - 1];
     
@@ -41,11 +44,11 @@ const ThrowingGame = () => {
 
     setTimeout(() => {
       setIsAnimating(false);
-      setBallPosition({ x: 0, y: 0 });
       if (isBasketHit) {
-        toast.success("Perfect shot! 🎯");
+        setScore(prev => prev + 1);
+        toast.success(`Scored! (${score + 1}/${attempts + 1} shots made)`);
       } else {
-        toast.error("Miss! Try again!");
+        toast.error(`Miss! (${score}/${attempts + 1} shots made)`);
       }
     }, 2000);
   };
@@ -55,6 +58,10 @@ const ThrowingGame = () => {
       {/* Game controls - moved to top */}
       <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded-lg shadow-lg w-64">
         <div className="space-y-4">
+          <div className="text-center mb-4">
+            <p className="font-bold text-lg">Score: {score}/{attempts}</p>
+            <p className="text-sm text-gray-600">Accuracy: {attempts > 0 ? Math.round((score/attempts) * 100) : 0}%</p>
+          </div>
           <div>
             <label className="text-sm font-medium">Angle: {angle}°</label>
             <Slider
