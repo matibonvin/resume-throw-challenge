@@ -10,30 +10,35 @@ const ThrowingGame = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [ballPosition, setBallPosition] = useState({ x: 0, y: 0 });
 
-  const calculateTrajectory = (angle: number, power: number) => {
+  const generateTrajectoryKeyframes = (angle: number, power: number) => {
+    const frames = [];
     const radians = (angle * Math.PI) / 180;
     const velocity = power * 0.2;
     const gravity = 9.81;
-    const time = 2;
+    const duration = 2; // seconds
+    const steps = 60; // number of keyframes
     
-    const x = velocity * Math.cos(radians) * time * 100;
-    const y = (velocity * Math.sin(radians) * time - (gravity * time * time) / 2) * -100;
+    for (let i = 0; i <= steps; i++) {
+      const t = (i / steps) * duration;
+      const x = velocity * Math.cos(radians) * t * 100;
+      const y = (velocity * Math.sin(radians) * t - (gravity * t * t) / 2) * -100;
+      frames.push({ x, y });
+    }
     
-    return { x, y };
+    return frames;
   };
 
   const throwBall = () => {
     setIsAnimating(true);
-    const trajectory = calculateTrajectory(angle, power);
+    const trajectory = generateTrajectoryKeyframes(angle, power);
+    const finalPosition = trajectory[trajectory.length - 1];
     
-    setBallPosition(trajectory);
-    
-    // Check if the ball lands in the basket (rough estimation)
+    // Check if the ball lands in the basket
     const isBasketHit = 
-      trajectory.x > 380 && 
-      trajectory.x < 420 && 
-      trajectory.y > -50 && 
-      trajectory.y < 50;
+      finalPosition.x > 380 && 
+      finalPosition.x < 420 && 
+      finalPosition.y > -50 && 
+      finalPosition.y < 50;
 
     setTimeout(() => {
       setIsAnimating(false);
@@ -89,9 +94,9 @@ const ThrowingGame = () => {
         animate={
           isAnimating
             ? {
-                x: ballPosition.x,
-                y: ballPosition.y,
-                rotate: 720,
+                x: generateTrajectoryKeyframes(angle, power).map(p => p.x),
+                y: generateTrajectoryKeyframes(angle, power).map(p => p.y),
+                rotate: [0, 720],
               }
             : {
                 x: 0,
@@ -100,11 +105,12 @@ const ThrowingGame = () => {
               }
         }
         transition={{
-          type: "tween",
           duration: 2,
+          ease: "linear",
+          times: Array.from({ length: 61 }, (_, i) => i / 60),
         }}
       >
-        <div className="w-8 h-8 bg-white rounded-full border-2 border-gray-300 shadow-md" />
+        <div className="w-8 h-8 bg-white rounded-full border-2 border-gray-300 shadow-md transform transition-transform hover:scale-105" />
       </motion.div>
 
       {/* Basket */}
