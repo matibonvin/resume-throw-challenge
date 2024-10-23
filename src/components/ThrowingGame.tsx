@@ -14,15 +14,16 @@ const ThrowingGame = () => {
   const generateTrajectoryKeyframes = (angle: number, power: number) => {
     const frames = [];
     const radians = (angle * Math.PI) / 180;
-    const velocity = power * 0.2;
+    const velocity = power * 0.15; // Reduced velocity multiplier for better gameplay
     const gravity = 9.81;
     const duration = 2;
     const steps = 60;
     
     for (let i = 0; i <= steps; i++) {
       const t = (i / steps) * duration;
-      const x = velocity * Math.cos(radians) * t * 100;
-      const y = (velocity * Math.sin(radians) * t - (gravity * t * t) / 2) * -100;
+      // Adjusted scale factors for better visual trajectory
+      const x = velocity * Math.cos(radians) * t * 80;
+      const y = (velocity * Math.sin(radians) * t - (gravity * t * t) / 2) * -50;
       frames.push({ x, y });
     }
     
@@ -30,15 +31,13 @@ const ThrowingGame = () => {
   };
 
   const checkBasketCollision = (trajectory: { x: number; y: number }[]) => {
-    // Check each point in the trajectory for collision with basket
-    for (let point of trajectory) {
-      // Basket position (right-40 from CSS)
-      const basketX = 400;
-      const basketY = 0;
-      const basketWidth = 16; // from CSS w-16
-      const basketHeight = 16; // approximate basket catching area
+    // Adjusted basket position and collision detection
+    const basketX = 350; // Moved basket slightly left
+    const basketY = -50; // Raised basket position
+    const basketWidth = 40;
+    const basketHeight = 30;
 
-      // Check if any point in the trajectory is within the basket area
+    for (let point of trajectory) {
       if (
         point.x >= basketX - basketWidth / 2 &&
         point.x <= basketX + basketWidth / 2 &&
@@ -71,12 +70,14 @@ const ThrowingGame = () => {
 
   return (
     <div className="relative h-[600px] w-full bg-blue-50 overflow-hidden">
-      {/* Game controls - moved to top */}
+      {/* Game controls */}
       <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded-lg shadow-lg w-64">
         <div className="space-y-4">
           <div className="text-center mb-4">
             <p className="font-bold text-lg">Score: {score}/{attempts}</p>
-            <p className="text-sm text-gray-600">Accuracy: {attempts > 0 ? Math.round((score/attempts) * 100) : 0}%</p>
+            <p className="text-sm text-gray-600">
+              Accuracy: {attempts > 0 ? Math.round((score/attempts) * 100) : 0}%
+            </p>
           </div>
           <div>
             <label className="text-sm font-medium">Angle: {angle}°</label>
@@ -135,8 +136,8 @@ const ThrowingGame = () => {
         <div className="w-8 h-8 bg-white rounded-full border-2 border-gray-300 shadow-md transform transition-transform hover:scale-105" />
       </motion.div>
 
-      {/* Basket */}
-      <div className="absolute right-40 bottom-20">
+      {/* Basket - adjusted position */}
+      <div className="absolute right-60 bottom-40">
         <div className="w-16 h-16 border-4 border-orange-500 rounded-b-full transform -rotate-12" />
         <div className="w-2 h-20 bg-gray-800 absolute -right-2 top-0" />
       </div>
