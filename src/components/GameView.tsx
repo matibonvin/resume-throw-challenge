@@ -8,15 +8,18 @@ import { Button } from "@/components/ui/button";
 
 const GameView = () => {
   const [gameState, setGameState] = useState<"review" | "crumpling" | "throwing">("review");
+  const [selectedResume, setSelectedResume] = useState<any>(null);
 
   const handleHire = () => {
     toast.success("Candidate hired! 🎉");
     setTimeout(() => {
       setGameState("review");
+      setSelectedResume(null);
     }, 2000);
   };
 
-  const handleReject = () => {
+  const handleReject = (resumeData: any) => {
+    setSelectedResume(resumeData);
     setGameState("crumpling");
     toast.error("Resume rejected! Click to crumple it!");
   };
@@ -31,8 +34,11 @@ const GameView = () => {
         {gameState === "review" && (
           <ResumeCard onHire={handleHire} onReject={handleReject} />
         )}
-        {gameState === "crumpling" && (
-          <CrumplingResume onComplete={handleCrumplingComplete} />
+        {gameState === "crumpling" && selectedResume && (
+          <CrumplingResume 
+            onComplete={handleCrumplingComplete}
+            resumeData={selectedResume}
+          />
         )}
         {gameState === "throwing" && (
           <motion.div
@@ -43,7 +49,10 @@ const GameView = () => {
           >
             <ThrowingGame />
             <Button
-              onClick={() => setGameState("review")}
+              onClick={() => {
+                setGameState("review");
+                setSelectedResume(null);
+              }}
               className="mt-4"
             >
               Back to Resume Review
