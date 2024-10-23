@@ -33,7 +33,6 @@ const ThrowingGame = () => {
     const trajectory = generateTrajectoryKeyframes(angle, power);
     const finalPosition = trajectory[trajectory.length - 1];
     
-    // Check if the ball lands in the basket
     const isBasketHit = 
       finalPosition.x > 380 && 
       finalPosition.x < 420 && 
@@ -53,8 +52,8 @@ const ThrowingGame = () => {
 
   return (
     <div className="relative h-[600px] w-full bg-blue-50 overflow-hidden">
-      {/* Game controls */}
-      <div className="absolute bottom-4 left-4 z-10 bg-white p-4 rounded-lg shadow-lg w-64">
+      {/* Game controls - moved to top */}
+      <div className="absolute top-4 left-4 z-10 bg-white p-4 rounded-lg shadow-lg w-64">
         <div className="space-y-4">
           <div>
             <label className="text-sm font-medium">Angle: {angle}°</label>
