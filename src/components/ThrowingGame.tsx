@@ -29,18 +29,34 @@ const ThrowingGame = () => {
     return frames;
   };
 
+  const checkBasketCollision = (trajectory: { x: number; y: number }[]) => {
+    // Check each point in the trajectory for collision with basket
+    for (let point of trajectory) {
+      // Basket position (right-40 from CSS)
+      const basketX = 400;
+      const basketY = 0;
+      const basketWidth = 16; // from CSS w-16
+      const basketHeight = 16; // approximate basket catching area
+
+      // Check if any point in the trajectory is within the basket area
+      if (
+        point.x >= basketX - basketWidth / 2 &&
+        point.x <= basketX + basketWidth / 2 &&
+        point.y >= basketY - basketHeight / 2 &&
+        point.y <= basketY + basketHeight / 2
+      ) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const throwBall = () => {
     setIsAnimating(true);
     setAttempts(prev => prev + 1);
     
     const trajectory = generateTrajectoryKeyframes(angle, power);
-    const finalPosition = trajectory[trajectory.length - 1];
-    
-    const isBasketHit = 
-      finalPosition.x > 380 && 
-      finalPosition.x < 420 && 
-      finalPosition.y > -50 && 
-      finalPosition.y < 50;
+    const isBasketHit = checkBasketCollision(trajectory);
 
     setTimeout(() => {
       setIsAnimating(false);
