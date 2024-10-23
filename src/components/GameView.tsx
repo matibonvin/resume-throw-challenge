@@ -21,7 +21,7 @@ const GameView = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-blue-50 to-blue-100 flex flex-col items-center justify-start pt-8">
       <AnimatePresence mode="wait">
         {gameState === "review" ? (
           <ResumeCard onHire={handleHire} onReject={handleReject} />
@@ -32,13 +32,16 @@ const GameView = () => {
             exit={{ opacity: 0 }}
             className="w-full max-w-4xl"
           >
-            <ThrowingGame />
-            <Button
-              onClick={() => setGameState("review")}
-              className="mt-4"
-            >
-              Back to Resume Review
-            </Button>
+            <div className="flex flex-col items-center gap-8">
+              <ResumeCard onHire={handleHire} onReject={handleReject} />
+              <ThrowingGame />
+              <Button
+                onClick={() => setGameState("review")}
+                className="mt-4"
+              >
+                Back to Resume Review
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
