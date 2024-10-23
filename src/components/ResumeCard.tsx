@@ -4,12 +4,28 @@ import { motion } from "framer-motion";
 import { Check, X } from "lucide-react";
 import { useMemo } from "react";
 
-interface ResumeCardProps {
-  onHire: () => void;
-  onReject: () => void;
+export interface Resume {
+  name: string;
+  experience: Array<{
+    title: string;
+    company: string;
+    period: string;
+    description: string;
+  }>;
+  education: {
+    degree: string;
+    school: string;
+    year: string;
+  };
+  skills: string[];
 }
 
-const resumeTemplates = [
+interface ResumeCardProps {
+  onHire: () => void;
+  onReject: (resumeData: Resume) => void;
+}
+
+const resumeTemplates: Resume[] = [
   {
     name: "John Developer",
     experience: [
@@ -109,7 +125,7 @@ const ResumeCard = ({ onHire, onReject }: ResumeCardProps) => {
         
         <div className="flex justify-center gap-4 mt-6">
           <Button
-            onClick={onReject}
+            onClick={() => onReject(selectedResume)}
             variant="destructive"
             className="w-32 gap-2"
           >

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import ResumeCard from "./ResumeCard";
+import ResumeCard, { Resume } from "./ResumeCard";
 import ThrowingGame from "./ThrowingGame";
 import CrumplingResume from "./CrumplingResume";
 import { toast } from "sonner";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 const GameView = () => {
   const [gameState, setGameState] = useState<"review" | "crumpling" | "throwing">("review");
-  const [selectedResume, setSelectedResume] = useState<any>(null);
+  const [selectedResume, setSelectedResume] = useState<Resume | null>(null);
 
   const handleHire = () => {
     toast.success("Candidate hired! 🎉");
@@ -18,7 +18,7 @@ const GameView = () => {
     }, 2000);
   };
 
-  const handleReject = (resumeData: any) => {
+  const handleReject = (resumeData: Resume) => {
     setSelectedResume(resumeData);
     setGameState("crumpling");
     toast.error("Resume rejected! Click to crumple it!");
