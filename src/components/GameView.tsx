@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ResumeCard from "./ResumeCard";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 
 const GameView = () => {
   const [gameState, setGameState] = useState<"review" | "throwing">("review");
