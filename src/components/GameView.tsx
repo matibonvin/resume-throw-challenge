@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import ResumeCard from "./ResumeCard";
+import ThrowingGame from "./ThrowingGame";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
@@ -9,7 +10,6 @@ const GameView = () => {
 
   const handleHire = () => {
     toast.success("Candidate hired! 🎉");
-    // Reset game state after hiring
     setTimeout(() => {
       setGameState("review");
     }, 2000);
@@ -30,11 +30,9 @@ const GameView = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="text-center"
+            className="w-full max-w-4xl"
           >
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Coming Soon: Paper Ball Throwing Game! 🎯
-            </h2>
+            <ThrowingGame />
             <Button
               onClick={() => setGameState("review")}
               className="mt-4"
